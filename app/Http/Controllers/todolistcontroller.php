@@ -11,7 +11,9 @@ class todolistcontroller extends Controller
 
     public function index()
     {
-    	return view('list');
+        $items=Item::all();
+       // return $item;
+    	return view('list',compact('items'));
     }
 
     public function create(request $request)

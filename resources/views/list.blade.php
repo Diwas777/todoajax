@@ -19,14 +19,14 @@
 				    <h3 class="panel-title">Ajax Todo List<a  href="#" data-toggle="modal" data-target="#myModal" id="addNew"><i class="fa fa-plus pull-right" aria-hidden="true"></i></a>
 					</h3>
 				  </div>
-
 				  <div class="panel-body">
-				    <ul class="list-group">
-				      <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">Cras justo odio</li>
-				      <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">Dapibus ac facilisis in</li>
-				      <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">Morbi leo risus</li>
-				      <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">Porta ac consectetur ac</li>
-				      <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">Vestibulum at eros</li>
+
+				    <ul class="list-group" id="refreshthis">
+				    	@foreach($items as $item)
+						 <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">{{$item->item}}</li>
+				    	@endforeach
+
+
 				    </ul>
 				  </div>
 
@@ -47,7 +47,7 @@
 			      <div class="modal-footer">
 			        <button type="button" class="btn btn-warning" id="delete" data-dismiss="modal" style="display: none">Delete</button>
 			        <button type="button" class="btn btn-primary"  id="savechanges" style="display: none">Save changes</button>
-			        <button type="button" class="btn btn-primary" id="AddButton">AddItem</button>
+			        <button type="button" class="btn btn-primary" data-dismiss="modal" id="AddButton">AddItem</button>
 			      </div>
 			    </div><!-- /.modal-content -->
 			  </div><!-- /.modal-dialog -->
@@ -57,7 +57,7 @@
 		</div>
 	</div>
 
- {{csrf_field()}}  
+ {{csrf_field()}}  <!--If Internel error 500 then use token concept-->
 
 	
 <!--Always jquery first then bootstrap javascript becoz bootstrap Javascript require jquery-->
@@ -102,6 +102,7 @@
 		$.post('list', {'text':text,'_token':$('input[name=_token]').val()}, function(data) {
 			/*optional stuff to do after success */
 			console.log(data);
+			$('#refreshthis').load(location.href+ ' #refreshthis');  //put space inbetween ' and # 
 		});
 							//console.log(data);
 			//when + is clicked and Add Button is clicked then this post method gets activate
