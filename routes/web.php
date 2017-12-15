@@ -18,3 +18,4 @@ Route::get('/', function () {
 
 Route::get('list','todolistcontroller@index');
 Route::post('list','todolistcontroller@create');
+Route::post('delete','todolistcontroller@delete');

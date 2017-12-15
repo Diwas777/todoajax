@@ -23,7 +23,10 @@
 
 				    <ul class="list-group" id="refreshthis">
 				    	@foreach($items as $item)
-						 <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">{{$item->item}}</li>
+						 <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">{{$item->item}}
+						<input type="hidden" id="itemId" value="{{$item->id}}">
+
+						 </li>
 				    	@endforeach
 
 
@@ -31,7 +34,7 @@
 				  </div>
 
 				</div>
-			</div>
+			</div> 
 			
 			<!--Modal javascript Modal -->
 			<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
@@ -42,7 +45,10 @@
 			        <h4 class="modal-title" id="title">Modal title</h4>
 			      </div>
 			      <div class="modal-body">
-			        <p><input type="text" placeholder="Type here" id="addItem" class="form-control"></p>
+
+			        <p>
+			        	<input type="hidden" id="id">
+			        	<input type="text" placeholder="Type here" id="addItem" class="form-control"></p>
 			      </div>
 			      <div class="modal-footer">
 			        <button type="button" class="btn btn-warning" id="delete" data-dismiss="modal" style="display: none">Delete</button>
@@ -71,20 +77,29 @@
 <script>
 
 	$(document).ready(function() {
-		$(".ourItem").on("click",function()
-			{ 
-				console.log("OK");
+		$(document).on('click', '.ourItem', function(event) {
+		//this is better than below
+		
+		//$(".ourItem").on("click",function()
+		//	{ 
+				
 				var item=$(this).text();
+				
+				var id=$(this).find('#itemId').val();
+				//when clicked on any item(having ourItem) for edit then on same ourItem(this) closing and opening tag find itemId and then take its value
+
 				$('#addItem').val(item);
 				$('#title').text('Edit Item');
 				$('#delete').show('400');
 				$('#savechanges').show('400');
 				$('#AddButton').hide();
+				$('#id').val(id);
 				console.log(item);
 			});﻿
 
-		$("#addNew").on("click",function()
-			{ 
+		$(document).on('click','#addNew', function(event) {
+		//$("#addNew").on("click",function()
+		//	{ 
 				
 				$('#addItem').val('');
 				$('#title').text('ADD Item');
@@ -102,13 +117,23 @@
 		$.post('list', {'text':text,'_token':$('input[name=_token]').val()}, function(data) {
 			/*optional stuff to do after success */
 			console.log(data);
-			$('#refreshthis').load(location.href+ ' #refreshthis');  //put space inbetween ' and # 
+			$('#refreshthis').load(location.href+ ' #refreshthis'); 
+			//this will add item and is able to view as soon as createbutton is clicked
+			 //put space inbetween ' and # 
 		});
 							//console.log(data);
 			//when + is clicked and Add Button is clicked then this post method gets activate
 			//so it call create() method of todolistcontroller then from this method it will return value to data field of this function
 		});
 		//console.log(text);
+
+		$('#delete').click(function(event) {
+			var id=$('#id').val();
+			$.post('delete', {'id': id,'_token':$('input[name=_token]').val()}, function(data) {
+				$('#refreshthis').load(location.href+ ' #refreshthis'); 
+			console.log(data);
+			});
+		});
 		}) ;
 	
 	
