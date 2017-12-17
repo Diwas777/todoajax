@@ -25,7 +25,6 @@
 				    	@foreach($items as $item)
 						 <li class="list-group-item ourItem" data-toggle="modal" data-target="#myModal">{{$item->item}}
 						<input type="hidden" id="itemId" value="{{$item->id}}">
-
 						 </li>
 				    	@endforeach
 
@@ -47,12 +46,12 @@
 			      <div class="modal-body">
 
 			        <p>
-			        	<input type="hidden" id="id">
+			        	<input type="hidden" id="id">   <!-- self providing value -->
 			        	<input type="text" placeholder="Type here" id="addItem" class="form-control"></p>
 			      </div>
 			      <div class="modal-footer">
 			        <button type="button" class="btn btn-warning" id="delete" data-dismiss="modal" style="display: none">Delete</button>
-			        <button type="button" class="btn btn-primary"  id="savechanges" style="display: none">Save changes</button>
+			        <button type="button" class="btn btn-primary" data-dismiss="modal"  id="savechanges" style="display: none">Save Changes</button>
 			        <button type="button" class="btn btn-primary" data-dismiss="modal" id="AddButton">AddItem</button>
 			      </div>
 			    </div><!-- /.modal-content -->
@@ -83,16 +82,17 @@
 		//$(".ourItem").on("click",function()
 		//	{ 
 				
-				var item=$(this).text();
+				var item=$.trim($(this).text());
 				
-				var id=$(this).find('#itemId').val();
-				//when clicked on any item(having ourItem) for edit then on same ourItem(this) closing and opening tag find itemId and then take its value
+				
 
 				$('#addItem').val(item);
 				$('#title').text('Edit Item');
 				$('#delete').show('400');
 				$('#savechanges').show('400');
 				$('#AddButton').hide();
+				var id=$(this).find('#itemId').val();
+				//when clicked on any item(having ourItem) for edit then on same ourItem(this) closing and opening tag find itemId and then take its value
 				$('#id').val(id);
 				console.log(item);
 			});﻿
@@ -134,6 +134,16 @@
 			console.log(data);
 			});
 		});
+
+		$('#savechanges').click(function(event) {
+			var id=$('#id').val();
+			var edititem=$('#addItem').val();
+			$.post('update', {'id': id,'edititem': edititem,'_token':$('input[name=_token]').val()}, function(data) {
+				$('#refreshthis').load(location.href+ ' #refreshthis'); 
+			console.log(data);
+			});
+		});
+
 		}) ;
 	
 	

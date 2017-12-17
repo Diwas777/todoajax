@@ -25,9 +25,17 @@ class todolistcontroller extends Controller
     }
 
 
-    public function delete(request $request)
+    public function delete(Request $request)
     {
         Item::where('id',$request->id)->delete();
+        return $request->all();
+    }
+
+    public function update(Request $request)
+    {
+        $item=Item::find($request->id);
+        $item->item=$request->edititem;
+        $item->save();
         return $request->all();
     }
 }
